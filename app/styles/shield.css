@@ -1,0 +1,8 @@
+.game-container {
+  text-align: center;
+}
+
+.game-container #shield {
+  width: 100%;
+  height: 100%;
+}
