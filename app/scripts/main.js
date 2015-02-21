@@ -21,10 +21,11 @@
         antialiasing: true,
         transparent: false,
         resolution: myDisplayResolution
-      },
+      };
 
-      stage = new PIXI.Stage(defaults.color),
+      var stage = new PIXI.Stage(defaults.color),
       renderer = PIXI.autoDetectRenderer(defaults.width, defaults.height, renderOptions),
+      //renderer = PIXI.CanvasRenderer(defaults.width, defaults.height, renderOptions),
       velocityX = 5,
       velocityY = 5,
       directionProcessed = false,
