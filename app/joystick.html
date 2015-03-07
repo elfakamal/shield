@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>joysrick</title>
+    <meta name="description" content="joystick">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="styles/joystick.css">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <section id="joystick" class="draggable" data-move-disabled>
+      <article class="center-container">
+        <div class="trigger-base absolute-center">
+          <div class="elastic-base absolute-center">
+            <div id="navigate" class="trigger draggable absolute-center"><p></p></div>
+          </div>
+        </div>
+      </article>
+      <article class="center-container">
+        <div class="trigger-base absolute-center">
+          <div class="elastic-base absolute-center">
+            <div id="fire" class="trigger draggable absolute-center"><p></p></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/interact/interact.js"></script>
+    <script src="scripts/joystick.js"></script>
+  </body>
+</html>
