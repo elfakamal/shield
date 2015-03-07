@@ -5,5 +5,5 @@
     log: function(object) {
       document.getElementById('console').innerHTML = '<pre>' + JSON.stringify(object) + '</pre>';
     }
-  }
+  };
 })(window);

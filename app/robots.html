@@ -1,9 +1,9 @@
 <!doctype html>
-<html class="no-js">
+<html>
   <head>
     <meta charset="utf-8">
-    <title>shield</title>
-    <meta name="description" content="">
+    <title>robots</title>
+    <meta name="description" content="robots game">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -12,7 +12,7 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/shield.css">
+    <link rel="stylesheet" href="styles/robots.css">
     <!-- endbuild -->
   </head>
   <body>
@@ -20,25 +20,19 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="game-container">
-      <h3>Welcome to Shield</h3>
-      <div id="shield"></div>
-    </div>
-    <div id="console"></div>
 
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/pixi/bin/pixi.dev.js"></script>
-    <script src="bower_components/phaser/build/phaser.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/phaser/build/custom/phaser-arcade-physics.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js({app,.tmp}) scripts/main.js -->
     <script src="scripts/util.js"></script>
     <script src="scripts/event-dispatcher.js"></script>
-    <script src="scripts/main.js"></script>
+    <script src="scripts/robots.js"></script>
     <!-- endbuild -->
 </body>
 </html>
