@@ -4,8 +4,11 @@ $(document).ready(function() {
 
   var width = $(window).width(),
       height = $(window).height(),
-      
+
       player,
+      playerNavigator,
+      playerNavigatorHandler,
+
       playerGun,
       playerGunWidth = 10,
       playerGunHeight = 20,
@@ -13,7 +16,7 @@ $(document).ready(function() {
       playerDefaultSpeed = 200,
 
       cursors,
-      
+
       bullets,
       bulletSpeed = 400,
       currentBullet,
@@ -22,6 +25,16 @@ $(document).ready(function() {
       fireRate = 100,
       nextFire = 0;
 
+  // Converts from degrees to radians.
+  var toRadians = function(degrees) {
+    return degrees * Math.PI / 180;
+  };
+
+  // Converts from radians to degrees.
+  var toDegrees = function(radians) {
+    return radians * 180 / Math.PI;
+  };
+
   var initWorld = function() {
     game.stage.backgroundColor = '#ffffff';
   };
@@ -29,6 +42,8 @@ $(document).ready(function() {
   var createPlayer = function() {
     player = game.add.sprite(game.world.centerX, game.world.centerY, 'dummy-robot');
     player.anchor.setTo(0.5, 0.5);
+    player.scale.x = 0.6;
+    player.scale.y = 0.6;
 
     game.physics.enable(player, Phaser.Physics.ARCADE);
   };
@@ -36,25 +51,48 @@ $(document).ready(function() {
   var createGun = function() {
     playerGun = game.add.sprite(game.world.centerX, game.world.centerY, 'gun');
     playerGun.anchor.setTo(0.5, 0.5);
+    playerGun.scale.x = 0.4;
+    playerGun.scale.y = 0.4;
   };
 
-  var createBullets = function() {    
+  var createNavigator = function() {
+    playerNavigator = game.add.group();
+    playerNavigatorHandler = playerNavigator.create(30, 0, 'bullet');
+    // playerNavigatorHandler.pivot.x = 0;
+    // playerNavigatorHandler.pivot.y = 0;
+  };
+
+  var createBullets = function() {
     bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
 
-    bullets.createMultiple(500, 'bullet');
+    bullets.createMultiple(50, 'bullet');
     bullets.setAll('checkWorldBounds', true);
     bullets.setAll('outOfBoundsKill', true);
   };
 
   var handleMovement = function() {
+    playerNavigator.rotation += 0.08;
+
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
     player.body.angularVelocity = 0;
 
+    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+      player.body.angularVelocity = -200;
+    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+      player.body.angularVelocity = 200;
+
+
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
       game.physics.arcade.velocityFromAngle(player.angle, playerDefaultSpeed, player.body.velocity);
+
+    playerGun.x = player.x;
+    playerGun.y = player.y;
+
+    playerNavigator.x = player.x;
+    playerNavigator.y = player.y;
   };
 
   var fire = function() {
@@ -67,7 +105,8 @@ $(document).ready(function() {
   };
 
   var handleGun = function() {
-    player.rotation = game.physics.arcade.angleToPointer(player);
+    player.rotation = playerNavigator.rotation;
+    playerGun.rotation = game.physics.arcade.angleToPointer(player);
 
     if(game.input.activePointer.isDown)
       fire();
@@ -88,8 +127,9 @@ $(document).ready(function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         initWorld();
         createPlayer();
+        createGun();
         createBullets();
-        // createGun();
+        createNavigator();
         cursors = game.input.keyboard.createCursorKeys();
       },
       update: function() {
