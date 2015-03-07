@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>joysrick</title>
     <meta name="description" content="joystick">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
     <link rel="stylesheet" href="styles/joystick.css">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -22,14 +22,14 @@
       <article class="center-container">
         <div class="trigger-base absolute-center">
           <div class="elastic-base absolute-center">
-            <div id="navigate" class="trigger draggable absolute-center"><p></p></div>
+            <div id="navigate" class="trigger draggable absolute-center"></div>
           </div>
         </div>
       </article>
       <article class="center-container">
         <div class="trigger-base absolute-center">
           <div class="elastic-base absolute-center">
-            <div id="fire" class="trigger draggable absolute-center"><p></p></div>
+            <button id="fire" class="trigger draggable absolute-center"></button>
           </div>
         </div>
       </article>
@@ -37,6 +37,7 @@
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/interact/interact.js"></script>
+    <script src="scripts/util.js"></script>
     <script src="scripts/joystick.js"></script>
   </body>
 </html>

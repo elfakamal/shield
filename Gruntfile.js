@@ -19,7 +19,7 @@ module.exports = function (grunt) {
   // Configurable paths
   var config = {
     app: 'app',
-    dist: 'dist'
+    dist: '../dist'
   };
 
   // Define the configuration for all the tasks
@@ -191,7 +191,7 @@ module.exports = function (grunt) {
       options: {
         dest: '<%= config.dist %>'
       },
-      html: '<%= config.app %>/index.html'
+      html: '<%= config.app %>/robots.html'
     },
 
     // Performs rewrites based on rev and the useminPrepare configuration
@@ -378,8 +378,8 @@ module.exports = function (grunt) {
     'uglify',
     'copy:dist',
     'rev',
-    'usemin',
-    'htmlmin'
+    'usemin'//,
+    // 'htmlmin'
   ]);
 
   grunt.registerTask('default', [

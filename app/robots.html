@@ -13,6 +13,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/robots.css">
+    <link rel="stylesheet" href="styles/joystick.css">
     <!-- endbuild -->
   </head>
   <body>
@@ -20,12 +21,18 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-
+    <form class="login">
+      <span>What's your secret key?</span>
+      <input type="text" placeholder="Please enter your secret key!"/>
+      <input type="submit" value="➡" />
+    </form>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/phaser/build/custom/phaser-arcade-physics.js"></script>
+    <script src="bower_components/interact/interact.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -33,6 +40,7 @@
     <script src="scripts/util.js"></script>
     <script src="scripts/event-dispatcher.js"></script>
     <script src="scripts/robots.js"></script>
+    <script src="scripts/joystick.js"></script>
     <!-- endbuild -->
-</body>
+  </body>
 </html>
