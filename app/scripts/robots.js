@@ -58,8 +58,7 @@ $(document).ready(function() {
   var createNavigator = function() {
     playerNavigator = game.add.group();
     playerNavigatorHandler = playerNavigator.create(30, 0, 'bullet');
-    // playerNavigatorHandler.pivot.x = 0;
-    // playerNavigatorHandler.pivot.y = 0;
+    playerNavigatorHandler.alpha = 0.2;
   };
 
   var createBullets = function() {
@@ -73,17 +72,14 @@ $(document).ready(function() {
   };
 
   var handleMovement = function() {
-    playerNavigator.rotation += 0.08;
-
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
     player.body.angularVelocity = 0;
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-      player.body.angularVelocity = -200;
+      playerNavigator.rotation -= 0.08;
     else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-      player.body.angularVelocity = 200;
-
+      playerNavigator.rotation += 0.08;
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
       game.physics.arcade.velocityFromAngle(player.angle, playerDefaultSpeed, player.body.velocity);
@@ -108,7 +104,7 @@ $(document).ready(function() {
     player.rotation = playerNavigator.rotation;
     playerGun.rotation = game.physics.arcade.angleToPointer(player);
 
-    if(game.input.activePointer.isDown)
+    if(game.input.activePointer.isDown || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
       fire();
   };
 
