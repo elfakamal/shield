@@ -28,13 +28,6 @@
           target.setAttribute('data-x', x);
           target.setAttribute('data-y', y);
         }
-      },
-      // call this function on every dragend event
-      onend: function (event) {
-        if(!event.target.hasAttribute('data-move-disabled')) {
-          var textEl = event.target.querySelector('p');
-          textEl && (textEl.textContent = 'moved a distance of ' + (Math.sqrt(event.dx * event.dx + event.dy * event.dy)|0) + 'px');
-        }
       }
     });
 })();

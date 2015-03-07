@@ -42,23 +42,27 @@ article:last-child {
   background: teal;
 }
 
-.elastic-base {
-  overflow: visible !important;
-  background: blue;
-  width: 30px;
-  height: 30px;
-}
-
 .trigger-base {
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
 
   background: turquoise;
 }
 
+.elastic-base {
+  overflow: visible !important;
+  /*background: blue;*/
+  border: 1px solid rgba(255,255,255, .5);
+}
+
+.elastic-base,
 .trigger {
   width: 80px;
   height: 80px;
 
+  border-radius: 80px;
+}
+
+.trigger {
   background: rgba(255,255,255, .6);
 }
