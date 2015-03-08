@@ -19,23 +19,13 @@
           endOnly: true,
           elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         },
-        // onstart: function(event) {
-        //   if(event.target.getAttribute('id') === 'navigate')
-        //     sendCommand('begin-navigate');
-        //   else if(event.target.getAttribute('id') === 'fire')
-        //     sendCommand('begin-fire');
-        // },
         onmove: function (event) {
           if(!event.target.hasAttribute('data-move-disabled')) {
             var target = event.target,
-                // keep the dragged position in the data-x/data-y attributes
                 x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
                 y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-            // translate the element
             target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-
-            // update the posiion attributes
             target.setAttribute('data-x', x);
             target.setAttribute('data-y', y);
 
@@ -50,14 +40,8 @@
           event.target.style.webkitTransform = event.target.style.transform = 'translate(0px, 0px)';
           event.target.setAttribute('data-x', 0);
           event.target.setAttribute('data-y', 0);
-
-          // if(event.target.getAttribute('id') === 'navigate')
-          //   sendCommand('end-navigate');
-          // else if(event.target.getAttribute('id') === 'fire')
-          //   sendCommand('end-fire');
         }
       });
-
 
     document.getElementById('fire').addEventListener('touchstart', function() {
       sendCommand('begin-fire');
