@@ -19,7 +19,7 @@ html, body {
 
 #joystick {
   position: absolute;
-  display: block;
+  display: none;
 
   background-color: #F5F5F5;
 

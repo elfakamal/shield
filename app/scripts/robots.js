@@ -2,22 +2,38 @@
 
 $(document).ready(function() {
 
+  //only for desktop
+  if(window.isMobile()) return;
+
+  //joystick logic
+  var socket = io();
+
   var width = $(window).width(),
       height = $(window).height(),
 
       player,
       playerNavigator,
       playerNavigatorHandler,
+      playerRotation = 0,
 
       playerGun,
       playerGunWidth = 10,
       playerGunHeight = 20,
+      playerGunRotation = 0,
+
+      playerGunPointer,
+      playerGunPointerHandler,
+
       playerBodySize = 100,
       playerDefaultSpeed = 200,
 
       cursors,
 
+      isRemoteFiring = false,
+      isRemoteNavigating = false,
+
       bullets,
+      bulletsCount = 200,
       bulletSpeed = 400,
       currentBullet,
 
@@ -25,15 +41,16 @@ $(document).ready(function() {
       fireRate = 100,
       nextFire = 0;
 
-  // Converts from degrees to radians.
-  var toRadians = function(degrees) {
-    return degrees * Math.PI / 180;
-  };
+  socket.on('begin-fire', function(data) { isRemoteFiring = true; });
+  socket.on('end-fire', function(data) { isRemoteFiring = false; });
+  socket.on('fire', function(data) { playerGunRotation = data.angle; });
 
-  // Converts from radians to degrees.
-  var toDegrees = function(radians) {
-    return radians * 180 / Math.PI;
-  };
+  socket.on('begin-navigate', function(data) { isRemoteNavigating = true; });
+  socket.on('end-navigate', function(data) { isRemoteNavigating = false; });
+  socket.on('navigate', function(data) { playerRotation = data.angle; });
+
+  var toRadians = function(degrees) { return degrees * Math.PI / 180; },
+      toDegrees = function(radians) { return radians * 180 / Math.PI; };
 
   var initWorld = function() {
     game.stage.backgroundColor = '#ffffff';
@@ -57,8 +74,14 @@ $(document).ready(function() {
 
   var createNavigator = function() {
     playerNavigator = game.add.group();
-    playerNavigatorHandler = playerNavigator.create(30, 0, 'bullet');
-    playerNavigatorHandler.alpha = 0.2;
+    playerNavigatorHandler = playerNavigator.create(30, -5, 'bullet');
+    playerNavigatorHandler.alpha = 0;
+  };
+
+  var createGunPointer = function() {
+    playerGunPointer = game.add.group();
+    playerGunPointerHandler = playerGunPointer.create(30, -5, 'bullet');
+    playerGunPointerHandler.alpha = 0;
   };
 
   var createBullets = function() {
@@ -66,7 +89,7 @@ $(document).ready(function() {
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
 
-    bullets.createMultiple(500, 'bullet');
+    bullets.createMultiple(bulletsCount, 'bullet');
     bullets.setAll('checkWorldBounds', true);
     bullets.setAll('outOfBoundsKill', true);
   };
@@ -77,11 +100,14 @@ $(document).ready(function() {
     player.body.angularVelocity = 0;
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-      playerNavigator.rotation -= 0.08;
+      playerRotation -= 0.08;
     else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-      playerNavigator.rotation += 0.08;
+      playerRotation += 0.08;
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    playerNavigator.rotation = playerRotation;
+    playerGunPointer.rotation = playerGunRotation;
+
+    if (game.input.keyboard.isDown(Phaser.Keyboard.UP) || isRemoteNavigating)
       game.physics.arcade.velocityFromAngle(player.angle, playerDefaultSpeed, player.body.velocity);
 
     playerGun.x = player.x;
@@ -89,22 +115,28 @@ $(document).ready(function() {
 
     playerNavigator.x = player.x;
     playerNavigator.y = player.y;
+
+    playerGunPointer.x = player.x;
+    playerGunPointer.y = player.y;
   };
 
   var fire = function() {
     if (game.time.now > nextFire && bullets.countDead() > 0) {
       nextFire = game.time.now + fireRate;
       currentBullet = bullets.getFirstDead();
-      currentBullet.reset(player.x - 5, player.y - 5);
-      game.physics.arcade.moveToPointer(currentBullet, bulletSpeed);
+      currentBullet.rotation = playerGunRotation;
+      currentBullet.anchor.x = 0.5;
+      currentBullet.anchor.y = 0.5;
+      currentBullet.reset(player.x, player.y);
+      game.physics.arcade.velocityFromAngle(currentBullet.angle, bulletSpeed, currentBullet.body.velocity);
     }
   };
 
   var handleGun = function() {
     player.rotation = playerNavigator.rotation;
-    playerGun.rotation = game.physics.arcade.angleToPointer(player);
+    playerGun.rotation = playerGunRotation;
 
-    if(game.input.activePointer.isDown || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+    if(game.input.activePointer.isDown || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) || isRemoteFiring)
       fire();
   };
 
@@ -122,10 +154,11 @@ $(document).ready(function() {
       create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         initWorld();
-        createPlayer();
         createGun();
         createBullets();
         createNavigator();
+        createGunPointer();
+        createPlayer();
         cursors = game.input.keyboard.createCursorKeys();
       },
       update: function() {
