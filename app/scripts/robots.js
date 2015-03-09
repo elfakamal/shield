@@ -15,6 +15,7 @@ $(document).ready(function() {
       playerNavigator,
       playerNavigatorHandler,
       playerRotation = 0,
+      playerDefaultSpeed = 150,
 
       playerGun,
       playerGunWidth = 10,
@@ -25,7 +26,6 @@ $(document).ready(function() {
       playerGunPointerHandler,
 
       playerBodySize = 100,
-      playerDefaultSpeed = 200,
 
       cursors,
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
 
       bullets,
       bulletsCount = 200,
-      bulletSpeed = 400,
+      bulletSpeed = 800,
       currentBullet,
 
       bulletTime = 0,
