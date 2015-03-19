@@ -12,10 +12,11 @@ $(document).ready(function() {
       height = $(window).height(),
 
       player,
+      playerBodySize = 100,
       playerNavigator,
       playerNavigatorHandler,
       playerRotation = 0,
-      playerDefaultSpeed = 150,
+      playerDefaultSpeed = 200,
 
       playerGun,
       playerGunWidth = 10,
@@ -25,7 +26,6 @@ $(document).ready(function() {
       playerGunPointer,
       playerGunPointerHandler,
 
-      playerBodySize = 100,
 
       cursors,
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
 
       bullets,
       bulletsCount = 200,
-      bulletSpeed = 800,
+      bulletSpeed = 400,
       currentBullet,
 
       bulletTime = 0,
@@ -128,7 +128,11 @@ $(document).ready(function() {
       currentBullet.anchor.x = 0.5;
       currentBullet.anchor.y = 0.5;
       currentBullet.reset(player.x, player.y);
-      game.physics.arcade.velocityFromAngle(currentBullet.angle, bulletSpeed, currentBullet.body.velocity);
+
+      if(game.input.activePointer.isDown)
+        game.physics.arcade.moveToPointer(currentBullet, bulletSpeed);
+      else
+        game.physics.arcade.velocityFromAngle(currentBullet.angle, bulletSpeed, currentBullet.body.velocity);
     }
   };
 

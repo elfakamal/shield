@@ -1,3 +1,4 @@
+
 .center-container {
   position: relative;
 }
@@ -27,12 +28,59 @@ html, body {
   height: 100%;
 }
 
-article {
+.pair-joystick {
+  width: 100%;
+  height: 100%;
+
+  background-image: url(../images/pair-button-base.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 33%;
+}
+
+#pair {
+  padding: 0;
+
+  width: 200px;
+  height: 200px;
+
+  border: none;
+  border-radius: 100px;
+
+  background-image: url(../images/pair-button.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: 100%;
+
+  outline: none;
+
+  transition: background-size 0.5s;
+  -webkit-transition: background-size 0.5s;
+}
+
+#pair.down {
+  background-size: 99%;
+}
+
+.onoff {
+  height: 200px;
+  width: 200px;
+  display: block;
+  background-position: center center;
+  background-image: url(../images/onoff.png);
+  background-repeat: no-repeat;
+  background-size: 20%;
+}
+
+article:not(.pair-joystick) {
+  display: none;
+
   width: 49%;
   height: 100%;
 }
 
-article:first-child {
+article:nth-child(2) {
   float: left;
 }
 
@@ -63,4 +111,6 @@ article:last-child {
 .trigger {
   background: rgba(0,0,0, .3);
   border: none;
+  box-shadow: 0px 0px 100px rgba(0,0,0, 0.7),
+              inset 0px 0px 100px rgba(0,0,0, 0.7);
 }

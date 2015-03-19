@@ -3,6 +3,11 @@
 
   $('#joystick').hide();
 
+  $(document).ready(function() {
+    $('form.login').hide();
+    initJoystick();
+  });
+
   var sendCommand = function(command, angle) {
     socket.emit(command, {command: command, angle: angle, key: 'robots'});
   };
@@ -10,6 +15,16 @@
   var initJoystick = function() {
     if(!win.isMobile()) return;
     $('#joystick').show();
+
+    $('#pair').on('mousedown', function(event) {
+      $(this).addClass('down');
+      $('.pair-joystick').hide();
+      $('article:not(.pair-joystick)').show();
+    });
+
+    $('#pair').on('mouseup', function(event) {
+      $(this).removeClass('down');
+    });
 
     interact('.draggable')
       .draggable({
@@ -58,34 +73,36 @@
     });
   };
 
-  //joystick logic
-  var socket = io(),
-      form = $('form.login'),
-      secretTextBox = form.find('input[type=text]'),
-      key = '', animationTimeout;
+  if(win.io !== null && typeof win.io === 'function') {
+    //joystick logic
+    var socket = io(),
+        form = $('form.login'),
+        secretTextBox = form.find('input[type=text]'),
+        key = '', animationTimeout;
 
-  // When the page is loaded it asks you for a key and sends it to the server
-  form.submit(function(e) {
-    e.preventDefault();
-    key = secretTextBox.val().trim();
+    // When the page is loaded it asks you for a key and sends it to the server
+    form.submit(function(e) {
+      e.preventDefault();
+      key = secretTextBox.val().trim();
 
-    if(key.length)
-      socket.emit('load', { key: key });
-  });
+      if(key.length)
+        socket.emit('load', { key: key });
+    });
 
-  // The server will either grant or deny access, depending on the secret key
-  socket.on('access', function(data){
-    if(data.access === 'granted') {
-      form.hide();
-      initJoystick();
-    }
-    else
-    {
-      clearTimeout(animationTimeout);
-      secretTextBox.addClass('denied animation');
-      animationTimeout = setTimeout(function() { secretTextBox.removeClass('animation'); }, 1000);
-      form.show();
-    }
-  });
+    // The server will either grant or deny access, depending on the secret key
+    socket.on('access', function(data){
+      if(data.access === 'granted') {
+        form.hide();
+        initJoystick();
+      }
+      else
+      {
+        clearTimeout(animationTimeout);
+        secretTextBox.addClass('denied animation');
+        animationTimeout = setTimeout(function() { secretTextBox.removeClass('animation'); }, 1000);
+        form.show();
+      }
+    });
+  }
 
 })(window);
