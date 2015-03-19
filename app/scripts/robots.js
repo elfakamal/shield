@@ -37,6 +37,8 @@ $(document).ready(function() {
       bulletSpeed = 400,
       currentBullet,
 
+      ennemies,
+
       bulletTime = 0,
       fireRate = 100,
       nextFire = 0;
@@ -54,6 +56,12 @@ $(document).ready(function() {
 
   var initWorld = function() {
     game.stage.backgroundColor = '#ffffff';
+  };
+
+  var initListeners = function() {
+    game.input.addMoveCallback(function() {
+      playerGunRotation = game.physics.arcade.angleToPointer(playerGun);
+    }, this);
   };
 
   var createPlayer = function() {
@@ -158,6 +166,7 @@ $(document).ready(function() {
       create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         initWorld();
+        initListeners();
         createGun();
         createBullets();
         createNavigator();
