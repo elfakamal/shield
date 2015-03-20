@@ -26,7 +26,6 @@ $(document).ready(function() {
       playerGunPointer,
       playerGunPointerHandler,
 
-
       cursors,
 
       isRemoteFiring = false,
@@ -38,6 +37,7 @@ $(document).ready(function() {
       currentBullet,
 
       ennemies,
+      ennemiesCount = 5,
 
       bulletTime = 0,
       fireRate = 100,
@@ -102,6 +102,25 @@ $(document).ready(function() {
     bullets.setAll('outOfBoundsKill', true);
   };
 
+  var createEnnemies = function() {
+    ennemies = game.add.group();
+    ennemies.enableBody = true;
+    ennemies.physicsBodyType = Phaser.Physics.ARCADE;
+
+    ennemies.createMultiple(ennemiesCount, 'ennemy');
+    ennemies.setAll('checkWorldBounds', true);
+    ennemies.setAll('outOfBoundsKill', true);
+
+    var i = 0;
+    ennemies.forEach(function(ennemy) {
+      ennemy.anchor.x = 0.5;
+      ennemy.anchor.y = 0.5;
+      ennemy.reset(i * 1000, i * 1000);
+    }, this);
+  };
+
+
+
   var handleMovement = function() {
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
@@ -162,6 +181,7 @@ $(document).ready(function() {
         game.load.image('dummy-robot', 'images/dummy_robot.png');
         game.load.image('gun', 'images/gun.png');
         game.load.image('bullet', 'images/bullet.png');
+        game.load.image('ennemy', 'images/ennemy.png');
       },
       create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -172,6 +192,7 @@ $(document).ready(function() {
         createNavigator();
         createGunPointer();
         createPlayer();
+        createEnnemies();
         cursors = game.input.keyboard.createCursorKeys();
       },
       update: function() {
