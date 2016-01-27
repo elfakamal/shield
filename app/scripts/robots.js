@@ -5,10 +5,11 @@ $(document).ready(function() {
   //only for desktop
   if(window.isMobile()) return;
 
-  //joystick logic
-  var socket = io();
+  var socket = io(),
 
-  var width = $(window).width(),
+      game,
+
+      width = $(window).width(),
       height = $(window).height(),
 
       player,
@@ -41,7 +42,9 @@ $(document).ready(function() {
 
       bulletTime = 0,
       fireRate = 100,
-      nextFire = 0;
+      nextFire = 0,
+
+      currentGameSession;
 
   socket.on('begin-fire', function(data) { isRemoteFiring = true; });
   socket.on('end-fire', function(data) { isRemoteFiring = false; });
@@ -53,6 +56,8 @@ $(document).ready(function() {
 
   var toRadians = function(degrees) { return degrees * Math.PI / 180; },
       toDegrees = function(radians) { return radians * 180 / Math.PI; };
+
+
 
   var initWorld = function() {
     game.stage.backgroundColor = '#ffffff';
@@ -119,8 +124,6 @@ $(document).ready(function() {
     }, this);
   };
 
-
-
   var handleMovement = function() {
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
@@ -171,37 +174,98 @@ $(document).ready(function() {
       fire();
   };
 
-  var game = new Phaser.Game(
-    width,
-    height,
-    Phaser.AUTO,
-    'phaser-example',
-    {
-      preload: function() {
-        game.load.image('dummy-robot', 'images/dummy_robot.png');
-        game.load.image('gun', 'images/gun.png');
-        game.load.image('bullet', 'images/bullet.png');
-        game.load.image('ennemy', 'images/ennemy.png');
-      },
-      create: function() {
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        initWorld();
-        initListeners();
-        createGun();
-        createBullets();
-        createNavigator();
-        createGunPointer();
-        createPlayer();
-        createEnnemies();
-        cursors = game.input.keyboard.createCursorKeys();
-      },
-      update: function() {
-        handleMovement();
-        handleGun();
-      },
-      render: function() {
-        game.debug.geom(player, '#9ACD32');
-      }
+
+  socket.emit('get-current-game-session', populateGameSession);
+  socket.emit('get-current-game-session-players', function(players) {
+    updatePlayers(players);
+
+    if(Object.keys(players).length > 0) {
+      $('.login').hide();
+      startGame();
     }
-  );
+  });
+
+
+  /**
+   * Sends a request to the server ini order to create a game session.
+   */
+  $('#start-game-button').click(function() {
+    socket.emit('add-game-session', populateGameSession);
+  });
+
+
+  /**
+   * When a player joins the game, add him to the dictionnary
+   */
+  socket.on('player-joined-game-session', function(data) {
+    $('.login').hide();
+    joinPlayer(data.player);
+    startGame();
+  });
+
+  function joinPlayer(player) {
+    var playerAvatar = $('<img src="images/player.png" class="animated jello player" alt="' + player.name + '" class="img-circle">');
+    $('#players').append(playerAvatar);
+  }
+
+  function updatePlayers(players) {
+    for(var name in players) {
+      joinPlayer(players[name]);
+    }
+  }
+
+  /**
+   * displays a game session in the html
+   */
+  function populateGameSession(gameSession) {
+    if(!gameSession) {
+      $('#start-game-button').show();
+      return;
+    }
+
+    $('#start-game-button').remove();
+    $('#session-details').show();
+    $('#session-name').html(gameSession.name);
+    $('#session-key').html(gameSession.key);
+    $('#session-description').html(gameSession.description);
+  }
+
+  /**
+   * Creates phaser game.
+   */
+  function startGame() {
+    game = new Phaser.Game(
+      width,
+      height,
+      Phaser.AUTO,
+      'shield-game',
+      {
+        preload: function() {
+          game.load.image('dummy-robot', 'images/dummy_robot.png');
+          game.load.image('gun', 'images/gun.png');
+          game.load.image('bullet', 'images/bullet.png');
+          game.load.image('ennemy', 'images/ennemy.png');
+        },
+        create: function() {
+          game.physics.startSystem(Phaser.Physics.ARCADE);
+          initWorld();
+          initListeners();
+          createGun();
+          createBullets();
+          createNavigator();
+          createGunPointer();
+          createPlayer();
+          createEnnemies();
+          cursors = game.input.keyboard.createCursorKeys();
+        },
+        update: function() {
+          handleMovement();
+          handleGun();
+        },
+        render: function() {
+          game.debug.geom(player, '#9ACD32');
+        }
+      }
+    );
+  }
 });

@@ -1,30 +1,15 @@
 (function(win) {
   'use strict';
 
-  $('#joystick').hide();
-
-  $(document).ready(function() {
-    $('form.login').hide();
-    initJoystick();
-  });
+  if(!win.isMobile()) return;
 
   var sendCommand = function(command, angle) {
     socket.emit(command, {command: command, angle: angle, key: 'robots'});
   };
 
   var initJoystick = function() {
-    if(!win.isMobile()) return;
     $('#joystick').show();
-
-    $('#pair').on('mousedown', function(event) {
-      $(this).addClass('down');
-      $('.pair-joystick').hide();
-      $('article:not(.pair-joystick)').show();
-    });
-
-    $('#pair').on('mouseup', function(event) {
-      $(this).removeClass('down');
-    });
+    $('#joystick article:not(.pair-joystick)').show();
 
     interact('.draggable')
       .draggable({
@@ -76,30 +61,41 @@
   if(win.io !== null && typeof win.io === 'function') {
     //joystick logic
     var socket = io(),
-        form = $('form.login'),
-        secretTextBox = form.find('input[type=text]'),
-        key = '', animationTimeout;
+        form = $('#joystick .form'),
+        playerNameTextBox = $('#player-name-input'),
+        sessionKeyTextBox = $('#session-key-input');
 
-    // When the page is loaded it asks you for a key and sends it to the server
-    form.submit(function(e) {
-      e.preventDefault();
-      key = secretTextBox.val().trim();
+    $('#join').on('click', function(event) {
+      var key = sessionKeyTextBox.first().val().trim(),
+          name = playerNameTextBox.first().val().trim();
 
-      if(key.length)
-        socket.emit('load', { key: key });
+      socket.emit('join-game-session', {
+        sessionKey: key,
+        player: { name: name }
+      });
+    });
+
+    $('.pair-joystick').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+      $(this).removeClass('shake');
+    });
+
+    socket.on('join-game-session-error', function(data) {
+      $('.pair-joystick').addClass('animated shake');
+      console.log(data);
+    });
+
+    socket.on('player-joined-game-session', function(data) {
+      form.hide();
+      initJoystick();
     });
 
     // The server will either grant or deny access, depending on the secret key
-    socket.on('access', function(data){
+    socket.on('access', function(data) {
       if(data.access === 'granted') {
         form.hide();
         initJoystick();
-      }
-      else
-      {
-        clearTimeout(animationTimeout);
-        secretTextBox.addClass('denied animation');
-        animationTimeout = setTimeout(function() { secretTextBox.removeClass('animation'); }, 1000);
+      } else {
+        sessionKeyTextBox.first().addClass('denied');
         form.show();
       }
     });

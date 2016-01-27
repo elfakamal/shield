@@ -4,3 +4,5 @@ dist
 bower_components
 app/resources/
 .DS_Store
+.imdone
+*.todo

@@ -15,6 +15,7 @@ module.exports = function (grunt) {
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
+  var serveStatic = require('serve-static');
 
   // Configurable paths
   var config = {
@@ -77,9 +78,13 @@ module.exports = function (grunt) {
         options: {
           middleware: function(connect) {
             return [
-              connect.static('.tmp'),
-              connect().use('/bower_components', connect.static('./bower_components')),
-              connect.static(config.app)
+              // connect.static('.tmp'),
+              // connect().use('/bower_components', connect.static('./bower_components')),
+              // connect.static(config.app)
+
+              serveStatic('.tmp'),
+              connect().use('/bower_components', serveStatic('./bower_components')),
+              serveStatic(config.app)
             ];
           }
         }
@@ -90,10 +95,15 @@ module.exports = function (grunt) {
           port: 9001,
           middleware: function(connect) {
             return [
-              connect.static('.tmp'),
-              connect.static('test'),
-              connect().use('/bower_components', connect.static('./bower_components')),
-              connect.static(config.app)
+              // connect.static('.tmp'),
+              // connect.static('test'),
+              // connect().use('/bower_components', connect.static('./bower_components')),
+              // connect.static(config.app)
+
+              serveStatic('.tmp'),
+              serveStatic('test'),
+              connect().use('/bower_components', serveStatic('./bower_components')),
+              serveStatic(config.app)
             ];
           }
         }
@@ -372,12 +382,12 @@ module.exports = function (grunt) {
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
-    'autoprefixer',
+    // 'autoprefixer',
     'concat',
     'cssmin',
     'uglify',
     'copy:dist',
-    'rev',
+    // 'rev',
     'usemin'//,
     // 'htmlmin'
   ]);

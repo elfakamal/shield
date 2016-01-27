@@ -20,7 +20,6 @@ html, body {
 
 #joystick {
   position: absolute;
-  display: none;
 
   background-color: #F5F5F5;
 
@@ -28,14 +27,26 @@ html, body {
   height: 100%;
 }
 
-.pair-joystick {
-  width: 100%;
-  height: 100%;
+@media (min-width: 768px) {
+  #joystick {
+    display: none;
+  }
+}
 
-  background-image: url(../images/pair-button-base.png);
+@media (max-width: 768px) {
+  #players, .login {
+    display: none !important;
+  }
+}
+
+.pair-joystick {
+  /*width: 100%;
+  height: 100%;*/
+
+  /*background-image: url(../images/pair-button-base.png);
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: 33%;
+  background-size: 33%;*/
 }
 
 #pair {
