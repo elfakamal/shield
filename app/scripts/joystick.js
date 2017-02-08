@@ -3,6 +3,8 @@
 
   if(!win.isMobile()) return;
 
+  var pairing = {};
+
   var sendCommand = function(command, angle) {
     socket.emit(command, {command: command, angle: angle, key: 'robots'});
   };
@@ -58,6 +60,22 @@
     });
   };
 
+  var getPairing = function() {
+    var storedPairing;
+
+    if (sessionStorage) {
+      storedPairing = JSON.parse(sessionStorage.getItem('shield-game:pairing'));
+    }
+
+    return storedPairing;
+  };
+
+  var savePairing = function() {
+    if (sessionStorage) {
+      sessionStorage.setItem('shield-game:pairing', JSON.stringify(pairing));
+    }
+  };
+
   if(win.io !== null && typeof win.io === 'function') {
     //joystick logic
     var socket = io(),
@@ -65,15 +83,24 @@
         playerNameTextBox = $('#player-name-input'),
         sessionKeyTextBox = $('#session-key-input');
 
-    $('#join').on('click', function(event) {
-      var key = sessionKeyTextBox.first().val().trim(),
-          name = playerNameTextBox.first().val().trim();
+    var storedPairing = getPairing();
 
-      socket.emit('join-game-session', {
-        sessionKey: key,
-        player: { name: name }
+    if(storedPairing) {
+      pairing = storedPairing;
+      form.hide();
+      initJoystick();
+      savePairing();
+    } else {
+      $('#join').on('click', function(event) {
+        var key = sessionKeyTextBox.first().val().trim(),
+            name = playerNameTextBox.first().val().trim();
+
+        socket.emit('join-game-session', {
+          sessionKey: key,
+          player: { name: name }
+        });
       });
-    });
+    }
 
     $('.pair-joystick').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
       $(this).removeClass('shake');
@@ -85,8 +112,10 @@
     });
 
     socket.on('player-joined-game-session', function(data) {
+      pairing = data;
       form.hide();
       initJoystick();
+      savePairing();
     });
 
     // The server will either grant or deny access, depending on the secret key

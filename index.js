@@ -55,7 +55,9 @@ var game = io.on('connection', function (socketIO) {
     socket.emit('access', { access: (data.key === secret ? 'granted' : 'denied') });
   });
 
-  //listen on game session generation event
+  /**
+   * listen on game session generation event
+   */
   socket.on('add-game-session', function(socketCallback) {
     var gameSession;
 
@@ -77,11 +79,18 @@ var game = io.on('connection', function (socketIO) {
     socketCallback(gameSession);
   });
 
+  /**
+   *
+   * When the player wants to join a game
+   *
+   */
   socket.on('join-game-session', function(data) {
     console.log('join request received', data);
     var errors = {};
 
-    if(currentGameSession.key !== data.sessionKey) {
+    if(typeof currentGameSession === 'undefined') {
+      errors.key = 'no current session available';
+    } else if (currentGameSession.key !== data.sessionKey) {
       errors.key = 'invalid game session key';
     }
 

@@ -1,7 +1,13 @@
 {
   "name": "shield",
+  "scripts": {
+    "start": "node index.js"
+  },
   "devDependencies": {
     "apache-server-configs": "latest",
+    "babel-core": "^6.4.5",
+    "chai": "^3.5.0",
+    "chai-immutable": "^1.5.3",
     "grunt": "latest",
     "grunt-autoprefixer": "latest",
     "grunt-concurrent": "latest",
@@ -21,9 +27,13 @@
     "grunt-svgmin": "latest",
     "grunt-usemin": "latest",
     "grunt-wiredep": "latest",
+    "jsdom": "^8.0.0",
     "jshint-stylish": "latest",
     "load-grunt-tasks": "latest",
-    "time-grunt": "latest"
+    "mocha": "^2.4.4",
+    "time-grunt": "latest",
+    "webpack": "^1.12.12",
+    "webpack-dev-server": "^1.14.1"
   },
   "engines": {
     "node": "latest"

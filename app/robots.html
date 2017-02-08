@@ -31,12 +31,11 @@
 
     <section id="joystick" class="center-container" data-move-disabled>
       <article class="form pair-joystick absolute-center">
+        <div class="errors"></div>
         <div id="form-group-player-name" class="form-group">
-          <label for="player-name-input" class="control-label"></label>
           <input type="text" id="player-name-input" class="input-lg" placeholder="Your name"/>
         </div>
         <div id="form-group-session-key" class="form-group">
-          <label for="session-key-input" class="control-label"></label>
           <input type="text" id="session-key-input" class="input-lg" placeholder="Session key"/>
         </div>
         <div class="form-group">
@@ -67,7 +66,7 @@
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/phaser/build/custom/phaser-arcade-physics.js"></script>
     <script src="/bower_components/interact/dist/interact.min.js"></script>
-    <script src="http://192.168.1.30:8080/socket.io/socket.io.js"></script>
+    <script src="http://192.168.1.72:8080/socket.io/socket.io.js"></script>
 
     <script src="scripts/util.js"></script>
     <script src="scripts/event-dispatcher.js"></script>
